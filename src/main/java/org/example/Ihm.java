@@ -33,11 +33,14 @@ public class Ihm {
 
     public void start() {
         int entry;
-        while (true) {
+        do {
             System.out.println("1/ ajouter un animal");
             System.out.println("2/ rechercher un animal par son nom");
             System.out.println("3/ rechercher des animaux par leur race");
-            System.out.println("4/ donner un repas à un animal");
+            System.out.println("4/ rechercher des animaux par leur nom");
+            System.out.println("5/ rechercher des animaux par leur age");
+            System.out.println("6/ donner un repas à un animal");
+            System.out.println("0/ quitter le programme");
             entry = scanner.nextInt();
             scanner.nextLine();
             switch (entry) {
@@ -51,12 +54,21 @@ public class Ihm {
                     animauxParRace();
                     break;
                 case 4:
+                    animauxParNom();
+                    break;
+                case 5:
+                    animauxParAge();
+                    break;
+                case 6:
                     ajouterUnRepas();
+                    break;
+                case 0:
                     break;
                 default:
                     return;
             }
-        }
+        }while(entry != 0);
+
     }
 
     private void ajouterUnAnimal() {
@@ -97,10 +109,14 @@ public class Ihm {
     }
 
     private void animauxParRace() {
-        System.out.println("Entrez le nom de la race des animaux que vous souhaitez afficher :");
+        System.out.println("Entrez la race des animaux que vous souhaitez afficher :");
         String race = scanner.nextLine();
         try {
             List<Animal> animaux = animalDAO.getAnimalsByRace(race);
+            if (animaux == null) {
+                System.out.println("Aucun animal n'a été trouvé");
+                return;
+            }
             for (Animal animal : animaux) {
                 System.out.println(animal);
             }
@@ -108,6 +124,41 @@ public class Ihm {
             throw new RuntimeException(e);
         }
     }
+
+    private void animauxParNom() {
+        System.out.println("Entrez un nom d'animaux que vous souhaitez afficher :");
+        String nom = scanner.nextLine();
+        try {
+            List<Animal> animaux = animalDAO.getAnimalsByNom(nom);
+            if (animaux == null) {
+                System.out.println("Aucun animal n'a été trouvé");
+                return;
+            }
+            for (Animal animal : animaux) {
+                System.out.println(animal);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void animauxParAge() {
+        System.out.println("Entrez l'age des animaux que vous souhaitez afficher :");
+        int age = scanner.nextInt();
+        try {
+            List<Animal> animaux = animalDAO.getAnimalsByAge(age);
+            if (animaux == null) {
+                System.out.println("Aucun animal n'a été trouvé");
+                return;
+            }
+            for (Animal animal : animaux) {
+                System.out.println(animal);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private void ajouterUnRepas() {
         Animal animal = animalParNom();

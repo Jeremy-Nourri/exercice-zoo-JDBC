@@ -84,7 +84,50 @@ public class AnimalDAO extends BaseDAO<Animal> {
             }finally {
                 close();
             }
+    }
 
+    public List<Animal> getAnimalsByNom(String nom) throws SQLException {
+        try {
+            _connection = DataBaseManager.getConnection();
+            List<Animal> animals = new ArrayList<>();
+            request = "SELECT * FROM Animal WHERE nom = ?";
+            preparedStatement = _connection.prepareStatement(request);
+            preparedStatement.setString(1, nom);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                animals.add(Animal.builder().nom(resultSet.getString("nom"))
+                        .race(resultSet.getString("race"))
+                        .description(resultSet.getString("description"))
+                        .age(resultSet.getInt("age")).build());
+            }
+            return animals;
+        }catch (SQLException e){
+            return  null;
+        }finally {
+            close();
+        }
+    }
+
+    public List<Animal> getAnimalsByAge(int age) throws SQLException {
+        try {
+            _connection = DataBaseManager.getConnection();
+            List<Animal> animals = new ArrayList<>();
+            request = "SELECT * FROM Animal WHERE age = ?";
+            preparedStatement = _connection.prepareStatement(request);
+            preparedStatement.setInt(1, age);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                animals.add(Animal.builder().nom(resultSet.getString("nom"))
+                        .race(resultSet.getString("race"))
+                        .description(resultSet.getString("description"))
+                        .age(resultSet.getInt("age")).build());
+            }
+            return animals;
+        }catch (SQLException e){
+            return  null;
+        }finally {
+            close();
+        }
     }
 
 

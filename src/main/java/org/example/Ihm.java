@@ -36,10 +36,11 @@ public class Ihm {
         do {
             System.out.println("1/ ajouter un animal");
             System.out.println("2/ rechercher un animal par son nom");
-            System.out.println("3/ rechercher des animaux par leur race");
-            System.out.println("4/ rechercher des animaux par leur nom");
-            System.out.println("5/ rechercher des animaux par leur age");
-            System.out.println("6/ donner un repas à un animal");
+            System.out.println("3/ afficher les repas d'un animal");
+            System.out.println("4/ rechercher des animaux par leur race");
+            System.out.println("5/ rechercher des animaux par leur nom");
+            System.out.println("6/ rechercher des animaux par leur age");
+            System.out.println("7/ donner un repas à un animal");
             System.out.println("0/ quitter le programme");
             entry = scanner.nextInt();
             scanner.nextLine();
@@ -51,15 +52,18 @@ public class Ihm {
                     animalParNom();
                     break;
                 case 3:
-                    animauxParRace();
+                    animalParNomAvecRepas();
                     break;
                 case 4:
-                    animauxParNom();
+                    animauxParRace();
                     break;
                 case 5:
-                    animauxParAge();
+                    animauxParNom();
                     break;
                 case 6:
+                    animauxParAge();
+                    break;
+                case 7:
                     ajouterUnRepas();
                     break;
                 case 0:
@@ -90,11 +94,29 @@ public class Ihm {
         }
     }
 
+    private void animalParNomAvecRepas() {
+        Animal animal = animalParNom();
+        try {
+            if (animal == null) {
+                return;
+            }
+            List<Repas> repas = repasDAO.getRepasByAnimal(animal.getId_animal());
+            System.out.println("Voici les repas qui lui ont été servis ");
+            for(Repas colation : repas) {
+                System.out.println(colation);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     private Animal animalParNom() {
         System.out.println("Taper le nom de l'animal :");
         String nom = scanner.nextLine();
         try {
             Animal animal = animalDAO.getByNom(nom);
+
             if (animal != null) {
                 System.out.println("L'animal est présent dans le zoo " + animal);
                 return animal;

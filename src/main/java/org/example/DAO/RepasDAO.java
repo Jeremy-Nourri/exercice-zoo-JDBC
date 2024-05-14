@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RepasDAO extends BaseDAO<Repas> {
 
@@ -43,6 +45,28 @@ public class RepasDAO extends BaseDAO<Repas> {
             _connection.rollback();
             return null;
         } finally {
+            close();
+        }
+    }
+
+    public List<Repas> getRepasByAnimal(int id) throws SQLException {
+        try {
+            _connection = DataBaseManager.getConnection();
+            List<Repas> repas = new ArrayList<>();
+            request = "SELECT * FROM Repas WHERE id_animal = ?";
+            preparedStatement = _connection.prepareStatement(request);
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                repas.add(Repas.builder()
+                        .nourriture(resultSet.getString("nourriture"))
+                        .dateHeure(resultSet.getTimestamp("dateHeure").toLocalDateTime())
+                        .build());
+            }
+            return repas;
+        }catch (SQLException e){
+            return  null;
+        }finally {
             close();
         }
     }

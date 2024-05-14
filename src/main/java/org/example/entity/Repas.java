@@ -14,4 +14,11 @@ public class Repas {
     private String nourriture;
     private Animal animal;
 
+    @Override
+    public String toString() {
+        return "Repas{" +
+                "dateHeure=" + dateHeure +
+                ", nourriture='" + nourriture + '\'' +
+                '}';
+    }
 }
